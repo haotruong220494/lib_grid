@@ -43,17 +43,20 @@ body > div {
   position: fixed;
   top: 32px;
   right: 32px;
+  z-index: 9999;
 }
 .toast {
   display: flex;
   align-items: center;
   background: #fff;
   padding: 20px 0;
+  min-width: 400px;
+  max-width: 450px;
   border-radius: 2px;
   border-left: 4px solid;
   box-shadow: 0 5px 8px rgba(0, 0, 0, .08);
   color: #333;
-  animation: slideInLeft ease .3s, fadeOut linear 1s 3s forwards;
+  transition: all linear .3s;
 }
 @keyframes slideInLeft {
   from {

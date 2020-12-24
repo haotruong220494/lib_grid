@@ -9,41 +9,85 @@
     <link href="./main.css" rel="stylesheet">
   </head>
   <body>
-    <div id="toast">
-      <div class="toast toast--success">
-        <div class="toast__icon toast__icon--success">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="toast__body">
-          <div class="toast__title toast__title--success">
-            Sucess
-          </div>
-          <div class="toast__message">
-            Lorem ipsum, dolor, sit amet consectetur adipisicing elit.
-          </div>
-        </div>
-        <div class="toast__close">
-          <i class="fas fa-times"></i>
-        </div>
-      </div>
-    </div>
+    <div id="toast"></div>
     <div>
-      <div class="btn btn--success">Show success toast</div>
-      <div class="btn btn--danger">Show error toast</div>
+      <div onclick="showSuccessToast();" class="btn btn--success">Show success toast</div>
+      <div onclick="showErrorToast();" class="btn btn--danger">Show error toast</div>
     </div>
 
     <script>
-      function toast(title = '', msg = '', type = 'success', duration = 3000){
-        const main = document.getElementById('toast')
-        if (main) {}
+      function toast({
+        title = '',
+        msg = '',
+        type = 'success',
+        duration = 3000
+      }){
+        const main = document.getElementById('toast');
+
+        if (main) {
+          const toast = document.createElement('div');
+
+          // AUTO REMOVE TOAST
+          const autoRemoved = setTimeout(function(){
+            main.removeChild(toast);
+          }, duration + 1000);
+
+          // REMOVE TOAST WHEN CLICK CLOSE
+          toast.onclick = function(e) {
+            if(e.target.closest('.toast__close')){
+              main.removeChild(toast);
+              clearTimeout(autoRemoved);
+            }
+          }
+          const icons = {
+            success: 'fas fa-check-circle',
+            warning: 'fas fa-exclamation-triangle',
+            danger: 'fas fa-exclamation-circle'
+          }
+          const icon = icons[type]
+          const delay = (duration/1000).toFixed(2);
+          const timeFadeOut = 1;
+
+          toast.classList.add('toast', `toast--${type}`);
+          toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards`;
+
+          toast.innerHTML = `
+            <div class="toast__icon toast__icon--${type}">
+              <i class="${icon}"></i>
+            </div>
+            <div class="toast__body">
+              <div class="toast__title">
+                ${title}
+              </div>
+              <div class="toast__message">
+                ${msg}
+              </div>
+            </div>
+            <div class="toast__close">
+              <i class="fas fa-times"></i>
+            </div>
+          `;
+          main.appendChild(toast);
+        }
       }
 
-      toast({
-        title: "Success",
-        msg: "Lorem ipsum, dolor, sit amet consectetur adipisicing elit.",
-        type: "success",
-        duration: 3000
-      })
+      function showSuccessToast() {
+        toast({
+          title: "Success",
+          msg: "Lorem ipsum, dolor, sit amet consectetur adipisicing elit.",
+          type: "success",
+          duration: 5000
+        });
+      }
+
+      function showErrorToast() {
+        toast({
+          title: "Error",
+          msg: "Error! 503",
+          type: "danger",
+          duration: 5000
+        });
+      }
     </script>
   </body>
 </html>
